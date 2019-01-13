@@ -1,0 +1,84 @@
+﻿@using BethanysPieShop.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<style>
+    a#nlDT2.nav-link.dropdown-toggle::after {
+        /* display: none; */
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: 0.45em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent;
+    }
+
+    div#dMRL.dropdown-menu.border-0.show {
+        top: 105%;
+        left: -81px;
+    }
+</style>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <li class="nav-item dropdown" id="liNavU" style="display: none">
+        <a asp-controller="Account" id="nlDT" class="nav-link dropdown-toggle" data-toggle="dropdown">
+
+            <img src="~/images/uyttxprhsqycyximpzjb.png" alt="" id="user" class="rounded-circle">
+        </a>
+
+        <div class="dropdown-menu border-0 p-0" style="position: absolute;" id="dM" aria-labelledby="navbarDropdown">
+            <p class="text-center my-2">
+                Hello! @UserManager.GetUserName(User)
+            </p>
+            <div class="dropdown-divider my-1"></div>
+            <a class="dropdown-item" href="/Account/Profile">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+            <a id="managerLink" class="dropdown-item" asp-controller="Account" asp-action="Manage">
+                <i class="fas fa-sliders-h"></i>
+                Manager
+            </a>
+            <form class="p-0" asp-controller="Account" asp-action="Logout" id="logoutFormM">
+                <a class="dropdown-item" href="javascript:document.getElementById('logoutFormM').submit()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Log off
+                </a>
+            </form>
+        </div>
+    </li>
+}
+else
+{
+    <li class="nav-item dropdown" id="liNavU3" style="display: none">
+        <a asp-controller="Account" id="nlDT2" class="nav-link dropdown-toggle py-0" data-toggle="dropdown">
+            <i style="font-size:30px" class="fas fa-user-circle"></i>
+        </a>
+
+        <div class="dropdown-menu px-0 border-0" style="position: absolute; min-width: 0.5rem;" id="dMRL"
+             aria-labelledby="navbarDropdown">
+            <a class="dropdown-item mx-0 py-0 px-3" id="registerLink" asp-controller="Account" asp-action="Register">
+                <i class="fas fa-user-plus"></i>
+                Register
+            </a>
+            <a class="dropdown-item mx-0 py-0 px-3" id="loginLink" asp-controller="Account" asp-action="Login">
+                <i class="fas fa-sign-in-alt"></i>
+                Log in
+            </a>
+        </div>
+    </li>
+}
+
+<script>
+    $(document).ready(function () {
+        $('a.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('a').addClass('active');
+    });
+</script>

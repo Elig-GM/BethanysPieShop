@@ -1,22 +1,24 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BethanysPieShop.Auth;
+using BethanysPieShop.Identity;
 using BethanysPieShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace BethanysPieShop.Controllers
 {
     [Authorize(Roles="Administrators")]
     public class AdminController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -32,40 +34,10 @@ namespace BethanysPieShop.Controllers
         {
             var users = _userManager.Users;
 
+            var j = Json(User);
+            var json = Json(users);
+
             return View(users);
-        }
-
-        public IActionResult AddUser()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddUser(AddUserViewModel addUserViewModel)
-        {
-            if (!ModelState.IsValid) return View(addUserViewModel);
-
-            var user = new ApplicationUser()
-            {
-                UserName = addUserViewModel.UserName,
-                Email = addUserViewModel.Email,
-                Birthdate = addUserViewModel.Birthdate,
-                City = addUserViewModel.City,
-                Country = addUserViewModel.Country
-            };
-
-            IdentityResult result = await _userManager.CreateAsync(user, addUserViewModel.Password);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("UserManagement", _userManager.Users);
-            }
-
-            foreach (IdentityError error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
-            return View(addUserViewModel);
         }
 
         public async Task<IActionResult> EditUser(string id)
@@ -76,7 +48,29 @@ namespace BethanysPieShop.Controllers
                 return RedirectToAction("UserManagement", _userManager.Users);
 
             var claims = await _userManager.GetClaimsAsync(user);
-            var vm = new EditUserViewModel() { Id = user.Id, Email = user.Email, UserName = user.UserName, UserClaims = claims.Select(c => c.Value).ToList() };
+            // var input = new EditUserViewModel.InputModel 
+            // {
+            //     FirstName = user.FirstName,
+            //     LastName = user.LastName,
+            //     PhoneNumber = user.PhoneNumber
+            // };
+            var vm = new EditUserViewModel() 
+            { 
+                Input = new EditUserViewModel.InputModel 
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhoneNumber = user.PhoneNumber
+                }, 
+                Id = user.Id, 
+                Email = user.Email, 
+                UserName = user.UserName,
+                Birthdate = user.Birthdate,
+                State = user.State,
+                City = user.City, 
+                UserClaims = claims.Select(c => c.Value).ToList() 
+            };
+            var json = Json(vm);
 
             return View(vm);
         }
@@ -88,11 +82,14 @@ namespace BethanysPieShop.Controllers
 
             if (user != null)
             {
+                user.FirstName = editUserViewModel.Input.FirstName;
+                user.LastName = editUserViewModel.Input.LastName;
                 user.Email = editUserViewModel.Email;
+                user.PhoneNumber = editUserViewModel.Input.PhoneNumber;
                 user.UserName = editUserViewModel.UserName;
                 user.Birthdate = editUserViewModel.Birthdate;
+                user.State = editUserViewModel.State;
                 user.City = editUserViewModel.City;
-                user.Country = editUserViewModel.Country;
 
                 var result = await _userManager.UpdateAsync(user);
 
@@ -320,7 +317,8 @@ namespace BethanysPieShop.Controllers
 
             var claimsManagementViewModel = new ClaimsManagementViewModel { UserId = user.Id, AllClaimsList = BethanysPieShopClaimTypes.ClaimsList };
 
-            return View(claimsManagementViewModel);
+            // return View(claimsManagementViewModel);
+            return RedirectToAction("ManageClaimsForUser", claimsManagementViewModel);
         }
 
         [HttpPost]

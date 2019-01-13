@@ -1,0 +1,201 @@
+<style>
+    .bg-dark {
+        background-color: #6c757e !important;
+    }
+
+    .quantity {
+        float: left;
+        margin-right: 15px;
+        background-color: #eee;
+        position: relative;
+        width: 80px;
+        overflow: hidden
+    }
+
+        .quantity input {
+            margin: 0;
+            text-align: center;
+            width: 15px;
+            height: 15px;
+            padding: 0;
+            float: right;
+            color: #000;
+            font-size: 20px;
+            border: 0;
+            outline: 0;
+            background-color: #F6F6F6
+        }
+
+            .quantity input.qty {
+                position: relative;
+                border: 0;
+                width: 100%;
+                height: 40px;
+                padding: 10px 25px 10px 10px;
+                text-align: center;
+                font-weight: 400;
+                font-size: 15px;
+                border-radius: 0;
+                background-clip: padding-box
+            }
+
+        .quantity .minus, .quantity .plus {
+            line-height: 0;
+            background-clip: padding-box;
+            -webkit-border-radius: 0;
+            -moz-border-radius: 0;
+            border-radius: 0;
+            -webkit-background-size: 6px 30px;
+            -moz-background-size: 6px 30px;
+            color: #bbb;
+            font-size: 20px;
+            position: absolute;
+            height: 50%;
+            border: 0;
+            right: 0;
+            padding: 0;
+            width: 25px;
+            z-index: 3
+        }
+
+            .quantity .minus:hover, .quantity .plus:hover {
+                background-color: #dad8da
+            }
+
+        .quantity .minus {
+            bottom: 0
+        }
+
+    .shopping-cart {
+        margin-top: 20px;
+    }
+</style>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>Pie</th>
+            <th>Selected amount</th>
+            <th class="text-right">Price</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-center">Remove</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
+        {
+            <tr>
+                <td class="text-left">
+                    
+                    <img src="@line.Pie.ImageThumbnailUrl" alt="" height="42" width="62">
+                    <a asp-controller="Pie" asp-action="Details" asp-route-id="@line.Pie.PieId">@line.Pie.Name</a>
+                </td>
+                <td class="text-center quantity">
+                    <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                        asp-route-pieId="@line.Pie.PieId" class="btn btn-danger btn-sm">
+                            -
+                    </a>
+                    <span style="margin:0.2em"></span>
+                    @line.Amount
+                    <span style="margin:0.2em"></span>
+                    <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                        asp-route-pieId="@line.Pie.PieId" class="btn btn-success btn-sm">
+                        +
+                    </a>
+                </td>
+                <!-- <td class="text-center">@line.Amount <span style="margin:0.8em"></span>
+                    <a class="btn btn-success btn-sm" asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                   asp-route-pieId="@line.Pie.PieId">+</a>
+                   <span style="margin:0.2em"></span>
+                    <a class="btn btn-danger btn-sm" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                   asp-route-pieId="@line.Pie.PieId">-</a></td> -->
+                <td class="text-right">@line.Pie.Price.ToString("c")</td>
+                <td class="text-right">
+                    @((line.Amount * line.Pie.Price).ToString("c"))
+                </td>
+                <td class="text-center">
+                    <a class="btn btn-danger " asp-controller="ShoppingCart" asp-action="RemoveAllFromShoppingCart"
+                   asp-route-pieId="@line.Pie.PieId"><span class="glyphicon glyphicon-trash"></span><span style="margin:0.2em"></span>Delete!</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="4" class="text-right">Total:</td>
+            <td class="text-center">
+                @Model.ShoppingCartTotal.ToString("c")
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+
+<div class="card shopping-cart2">
+            <div class="card-header bg-dark text-light">
+                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                Shipping cart
+                <a href="" class="btn btn-outline-info btn-sm pull-right">Continiu shopping</a>
+                <div class="clearfix"></div>
+                <!-- <a asp-controller="ShoppingCart" asp-action="ClearFromShoppingCart">
+                    <button type="button" class="btn btn-outline-danger btn-xs">
+                        <i class="fa fa-trash" aria-hidden="true"></i>
+                    </button>
+                </a> -->
+                <div class="clearfix"></div>
+            </div>
+            <div class="card-body">
+                    <!-- PRODUCT -->
+                @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
+                {
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-md-2 text-center">
+                                <img class="img-responsive" src="@line.Pie.ImageThumbnailUrl" alt="prewiew" width="120" height="80">
+                        </div>
+                        <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+                            <h4 class="product-name"><strong>@line.Pie.Name</strong></h4>
+                            <h4>
+                                <small>@line.Pie.ShortDescription</small>
+                            </h4>
+                        </div>
+                        <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
+                            <div class="col-3 col-sm-3 col-md-6 text-md-right" style="padding-top: 5px">
+                                <h6><strong>@line.Pie.Price.ToString("c") <span class="text-muted">x</span></strong></h6>
+                            </div>
+                            <div class="col-4 col-sm-4 col-md-4">
+                                <div class="quantity">
+                                    <input type="button" value="+" class="plus" asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
+                        asp-route-pieId="@line.Pie.PieId">
+                                    <input type="number" step="1" max="99" min="1" value="@line.Amount" title="Qty" class="qty"
+                                           size="4">
+                                    <input type="button" value="-" class="minus" asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart"
+                                        asp-route-pieId="@line.Pie.PieId">
+                                </div>
+                            </div>
+                            <div class="col-2 col-sm-2 col-md-2 text-right" >
+                                <a asp-controller="ShoppingCart" asp-action="RemoveAllFromShoppingCart"
+                   asp-route-pieId="@line.Pie.PieId">
+                                <button type="button" class="btn btn-outline-danger btn-xs">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- END PRODUCT -->
+                }    
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="pull-right" style="margin: 5px">
+                        Total: <b>@Model.ShoppingCartTotal.ToString("c")</b>
+                    </div>
+                    <div class="pull-right" style="margin: 10px">
+                    <a asp-controller="Order" asp-action="Checkout" class="btn btn-success pull-right">Checkout</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>

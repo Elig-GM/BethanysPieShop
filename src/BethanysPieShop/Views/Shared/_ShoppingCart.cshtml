@@ -1,0 +1,23 @@
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navCart">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="badge" id="itemsCountNavCart">         
+            </span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right" id="dropdownMNavCart" aria-labelledby="navbarDropdown">
+            <div class="col-md-12">
+                <a asp-controller="ShoppingCart" asp-action="Index">
+                    <h4 class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Your cart</span>
+                    </h4>
+                </a>
+                <ul class="list-group mb-1">
+                    <div id="itemsNavCart"></div>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (USD)</span>
+                        <strong id="totalP_NavCart"></strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+

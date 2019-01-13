@@ -1,0 +1,106 @@
+// {
+//     // Use IntelliSense para saber los atributos posibles.
+//     // Mantenga el puntero para ver las descripciones de los existentes atributos 
+//     // Para más información, visite: https://go.microsoft.com/fwlink/?linkid=830387
+//     "version": "0.2.0",
+//     "configurations": [
+//         {
+//             "name": ".NET Core Launch (web)",
+//             "type": "coreclr",
+//             "request": "launch",
+//             "preLaunchTask": "build",
+//             "program": "${workspaceFolder}/bin/Debug/netcoreapp2.1/BethanysPieShop.dll",
+//             "args": [],
+//             "cwd": "${workspaceFolder}",
+//             "stopAtEntry": false,
+//             "internalConsoleOptions": "openOnSessionStart",
+//             "launchBrowser": {
+//                 "enabled": true,
+//                 "args": "${auto-detect-url}",
+//                 "windows": {
+//                     "command": "cmd.exe",
+//                     "args": "/C start ${auto-detect-url}"
+//                 },
+//                 "osx": {
+//                     "command": "open"
+//                 },
+//                 "linux": {
+//                     "command": "xdg-open"
+//                 }
+//             },
+//             "env": {
+//                 "ASPNETCORE_ENVIRONMENT": "Development"
+//             },
+//             "sourceFileMap": {
+//                 "/Views": "${workspaceFolder}/Views"
+//             }
+//         },
+//         {
+//             "name": ".NET Core Attach",
+//             "type": "coreclr",
+//             "request": "attach",
+//             "processId": "${command:pickProcess}"
+//         }
+//     ]
+// }
+
+{
+    "version": "0.2.0",
+    "compounds": [{
+        "name": "ASP.Net Core & Browser",
+        "configurations": [".NET Core Launch (web)", "Launch Chrome"]
+    }],
+    "dotnet watch run": {
+        "commandName": "Executable",
+        "executablePath": "C:\\Program Files\\dotnetdotnet.exe",
+        "commandLineArgs": "watch run",
+        "workingDirectory": "${workspaceRoot}",
+        "launchBrowser": true,
+        "launchUrl": "https://localhost:5001/",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development"
+        }
+    },
+    "configurations": [
+        {
+            "name": ".NET Core Launch (web)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/BethanysPieShop.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "stopAtEntry": false,
+            "launchBrowser": {
+                "enabled": true,
+                "args": "${auto-detect-url}",
+                "windows": {
+                    "command": "cmd.exe",
+                    "args": "/C start \"\" \"C:/Program Files (x86)/Google/Chrome/Application/chrome.exe\" ${auto-detect-url}"
+                }
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                // "ASPNETCORE_URLS": "http://localhost:6666/"
+
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceRoot}/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
+        },
+        
+        {
+            "name": "Launch Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceRoot}/wwwroot"
+        }
+    ]
+}

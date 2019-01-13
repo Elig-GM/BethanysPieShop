@@ -1,0 +1,22 @@
+@using BethanysPieShop.NavPages
+@model IEnumerable<Category>
+
+
+<li class="nav-item dropdown">
+    <a asp-controller="Pie" class="nav-link dropdown-toggle" data-toggle="dropdown">
+        Pies
+        <b class="caret"></b>
+    </a>
+    <!-- <ul class="dropdown-menu"> -->
+    <div class="dropdown-menu border-0" aria-labelledby="navbarDropdown" style="min-width: 0rem;">
+        @foreach (var category in Model)
+        {
+            <a asp-controller="Pie" class="dropdown-item" asp-action="List"
+                   asp-route-category="@category.CategoryName">@category.CategoryName</a>
+        }
+        <div class="dropdown-divider mx-3 mb-1"></div>
+        <a asp-controller="Pie" class="dropdown-item" asp-action="List" asp-route-Category="">View all pies</a>
+    </div>
+        
+    <!-- </ul> -->
+</li>

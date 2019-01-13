@@ -1,26 +1,22 @@
-﻿@using Microsoft.AspNetCore.Mvc.Localization
-@model HomeViewModel
+﻿@model HomeViewModel
 
-@inject IViewLocalizer Localizer
 
 @{
-    ViewData["PiesOfTheWeekHeader"] = Localizer["PiesOfTheWeekHeader"];
-    ViewData["PiesOfTheWeekSubHeader"] = Localizer["PiesOfTheWeekSubHeader"];
+    ViewData["Title"] = "Home";
+    ViewData["returnUrl"] = "/";
 }
 
 @await Html.PartialAsync("Carousel")
 
-@*<h2>@ViewData["PiesOfTheWeekHeader"]</h2>
-    <h4>Our weekly selection - just for you!</h4>*@
+<h2>Pies of the week</h2>
+<h5>Our weekly selection - just for you!</h5>
 
-<h2>@ViewData["PiesOfTheWeekHeader"]</h2>
-<h4>@ViewData["PiesOfTheWeekSubHeader"]</h4>
-
-<div class="row">
+<div class="row d-flex justify-content-center pt-3">
 
     @foreach (var pie in Model.PiesOfTheWeek)
     {
-        @Html.Partial("PieOfTheWeekSummary", pie)
+        @*@Html.Partial("PieOfTheWeekSummary", pie)*@
+        <partial name="PieOfTheWeekSummary" , model="pie" />
     }
 
 </div>

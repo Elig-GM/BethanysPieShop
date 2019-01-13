@@ -72,14 +72,6 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Pie.SugarLevel" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <select asp-for="Pie.SugarLevel" class="form-control"
-                    asp-items="@new SelectList(Enum.GetNames(typeof(SugarLevel)))"></select>
-        </div>
-    </div>
-
-    <div class="form-group">
         <label asp-for="Categories" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <select asp-for="CategoryId" class="form-control"

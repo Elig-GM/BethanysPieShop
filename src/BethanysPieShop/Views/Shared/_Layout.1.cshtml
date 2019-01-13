@@ -1,0 +1,300 @@
+﻿@using BethanysPieShop.NavPages
+@using BethanysPieShop.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject ShoppingCart ShoppingCart
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@{
+    var cart = @ShoppingCart.GetShoppingCartItems();
+}
+
+<!-- STYILE -->
+<style>
+    .site-header {
+        background-color: #a593c2;
+        /*-webkit-backdrop-filter: saturate(180%) blur(20px);*/
+        /*backdrop-filter: saturate(180%) blur(20px);*/
+    }
+
+        .site-header a {
+            color: #fff;
+            transition: ease-in-out color .15s;
+        }
+
+            .site-header a:hover {
+                color: rgba(0, 0, 0, .85);
+                text-decoration: none;
+            }
+
+        .site-header .navbar-brand:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .site-header .dropdown-item {
+            color: rgba(0, 0, 0, .85);
+            text-decoration: none;
+        }
+
+
+    /*.navbar-brand {
+        display: inline-block;
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
+        margin-right: inherit;
+        font-size: 1.25rem;
+        line-height: inherit;
+        white-space: nowrap;
+    }*/
+    a#cart.nav-link.dropdown-toggle::after{
+        display: none;
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent;
+    }
+    div#dM2.dropdown-menu.show{
+        top: 95%;
+        left: -265px;
+    }
+    a#cart2.nav-link.dropdown-toggle::after {
+        display: none;
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent;
+    }
+
+    @@media (min-width: 394px) {
+        div#dM3.dropdown-menu.show {
+            top: 95%;
+            left: -265px;
+        }
+    }
+
+    @@media (max-width: 394px) {
+        div#dM3.dropdown-menu.show {
+            top: 95%;
+            left: -205px;
+        }
+    }
+
+    
+</style>
+<!-- END STYLE -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bethany's Pie Shop - @ViewData["Title"]</title>
+    <link rel="icon" href="~/images/bethanylogo.png">
+
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/form.css" />
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/css/toastr.min.css" />
+    <!-- <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/> -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
+
+</head>
+
+<body>
+    <!-- NAVGATION -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light py-0">
+        <div class="container body-content">
+            <button class="navbar-toggler p-1 border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand mr-auto mr-lg-0 p-2" asp-controller="Home" asp-action="Index">Bethany's Pie</a>
+
+            <!-- CART -->
+            @*<div id="cartD">
+            @if (@ShoppingCart.GetShoppingCartCount() > 0)
+            {*@
+                <li class="nav-item dropdown mr-2 d-none p-1 ml-auto" id="liNav">
+                    <a class="nav-link dropdown-toggle p-0" style="vertical-align: initial;" asp-controller="ShoppingCart"
+                       asp-action="Index" data-toggle="dropdown" id="cart2">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span class="badge" id="itemsCount"></span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" id="dM3" aria-labelledby="navbarDropdown">
+                        <div class="col-md-12">
+                            <a asp-controller="ShoppingCart" asp-action="Index" style="">
+                                <h4 class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted">Your cart</span>
+                                    <!-- <span class="oi oi-cart"></span> -->
+                                </h4>
+                            </a>
+                            <ul class="list-group mb-3">
+                                <div id="pieCart"></div>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total (USD)</span>
+                                    <strong id="totalPrice"></strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            @*}
+            </div>*@
+            <!-- END CART -->
+            <!-- USER -->
+            <ul class="navbar-nav">
+                <partial name="_LoginPartialM" />
+            </ul>
+            <!-- END USER -->
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" id="homeNI" asp-controller="Home" asp-action="Index">
+                            Home <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    @await Component.InvokeAsync("CategoryMenuNav")
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Contact" asp-action="Index">Contact us</a>
+                    </li>
+                    @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
+                    {
+                        @await Component.InvokeAsync("AdminMenu")
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" asp-controller="PieManagement"
+                               asp-action="Index">Pie Management</a>
+                        </li>
+                    }
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <!-- <partial name="_ShoppingCart" /> -->
+                    <div id="par"></div>
+                    @*@await Component.InvokeAsync("ShoppingCartSummary")*@
+                    <partial name="_LoginPartial" />
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END NAVEGATION -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p>&copy; 2018 - EliG MosQera</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+
+
+    @RenderSection("scripts", required: false)
+
+    <!-- SCRIPT -->
+    <script>
+        $(document).ready(function () {
+            // getShoppingCart();
+            if ($(document).width() < 992 && $(document).width() > 327) {
+                $('#liNavU').removeClass('d-none')
+                $('#liNavU').addClass('d-block');
+                $('#liNavU2').removeClass('d-block')
+                $('#liNavU2').addClass('d-none');
+                $('#liNavU3').removeClass('d-none')
+                $('#liNavU3').addClass('d-block');
+                $('#liR').removeClass('d-block')
+                $('#liL').removeClass('d-block')
+                $('#liR').addClass('d-none');
+                $('#liL').addClass('d-none');
+            } else {
+                $('#liNav2').removeClass('d-none')
+                $('#liNav2').addClass('d-block');
+                $('#liNavU').removeClass('d-block')
+                $('#liNavU').addClass('d-none');
+                $('#liNavU2').removeClass('d-none')
+                $('#liNavU2').addClass('d-block');
+                $('#liNavU3').removeClass('d-block')
+                $('#liNavU3').addClass('d-none');
+                $('#liR').removeClass('d-none')
+                $('#liL').removeClass('d-none')
+                $('#liR').addClass('d-block');
+                $('#liL').addClass('d-block');
+
+            }
+        });
+        $(document).ready(function () {
+            $('li.active').removeClass('active');
+            $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+        });
+        $(window).resize(function () {
+            // getShoppingCart();
+            if ($(document).width() < 992 && $(document).width() > 327) {
+                $('#liNavU').removeClass('d-none')
+                $('#liNavU').addClass('d-block');
+                $('#liNavU2').removeClass('d-block')
+                $('#liNavU2').addClass('d-none');
+                $('#liNavU3').removeClass('d-none')
+                $('#liNavU3').addClass('d-block');
+                $('#liR').removeClass('d-block')
+                $('#liL').removeClass('d-block')
+                $('#liR').addClass('d-none');
+                $('#liL').addClass('d-none');
+            } else {
+                $('#liNavU').removeClass('d-block')
+                $('#liNavU').addClass('d-none');
+                $('#liNavU2').removeClass('d-none')
+                $('#liNavU2').addClass('d-block');
+                $('#liNavU3').removeClass('d-block')
+                $('#liNavU3').addClass('d-none');
+                $('#liR').removeClass('d-none')
+                $('#liL').removeClass('d-none')
+                $('#liR').addClass('d-block');
+                $('#liL').addClass('d-block');
+            }
+        });
+    </script>
+    <!-- <script src="~/js/cart-crud.js"></script> -->
+    <!-- END SCRIPT -->
+</body>
+
+</html>

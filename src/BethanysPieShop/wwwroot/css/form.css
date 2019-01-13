@@ -1,0 +1,16 @@
+.container {
+    max-width: 1060px;
+ }
+  
+ .lh-condensed { line-height: 1.25; }
+
+ .navbar-dark,  .bg-dark{
+    background-color: #a593c2;
+    border-color: #a593c2;
+  
+}
+
+.checkFB {
+    padding-right: 10px;
+    padding-left: 10px;
+}

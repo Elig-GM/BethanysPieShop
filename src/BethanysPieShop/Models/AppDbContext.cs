@@ -1,14 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using BethanysPieShop.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BethanysPieShop.Auth;
+
 
 namespace BethanysPieShop.Models
 {
-    public class AppDbContext: IdentityDbContext<ApplicationUser>
+    public class AppDbContext: IdentityDbContext<AppUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
@@ -18,12 +20,12 @@ namespace BethanysPieShop.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Pie>()
-                .HasOne(p => p.RecipeInformation)
-                .WithOne(i => i.Pie)
-                .HasForeignKey<RecipeInformation>(b => b.PieId);
+            // builder.Entity<PieReview>()
+            //     .HasOne(p => p.UserReview)
+            //     .WithOne(i => i.Id)
+            //     .HasForeignKey<AppUser>(b => b.);
 
-            builder.Entity<ApplicationUser>()
+            builder.Entity<AppUser>()
                 .HasMany(e => e.Claims)
                 .WithOne()
                 .HasForeignKey(e => e.UserId)
@@ -36,8 +38,9 @@ namespace BethanysPieShop.Models
         public DbSet<ShoppingCartItem> ShoppingCartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+
         public DbSet<PieReview> PieReviews { get; set; }
-        public DbSet<PieGiftOrder> PieGiftOrders { get; set; }
+        public DbSet<LikeReview> LikesReview { get; set; }
 
     }
 }

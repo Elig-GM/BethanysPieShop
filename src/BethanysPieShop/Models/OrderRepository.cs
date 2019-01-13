@@ -41,11 +41,5 @@ namespace BethanysPieShop.Models
 
             _appDbContext.SaveChanges();
         }
-
-        public void CreatePieGiftOrder(PieGiftOrder pieGiftOrder)
-        {
-            _appDbContext.PieGiftOrders.Add(pieGiftOrder);
-            _appDbContext.SaveChanges();
-        }
     }
 }

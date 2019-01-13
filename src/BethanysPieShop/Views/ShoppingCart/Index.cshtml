@@ -1,47 +1,165 @@
-﻿@tagHelperPrefix "custom:"
+﻿@model ShoppingCartViewModel
 
-@model ShoppingCartViewModel
+<link href="~/css/ecomerce.css" rel="stylesheet" />
 
-<h2>Your shopping cart</h2>
-<h4>Here are the delicious pies in your shopping cart.</h4>
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>Selected amount</th>
-        <th>Pie</th>
-        <th class="text-right">Price</th>
-        <th class="text-right">Subtotal</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var line in Model.ShoppingCart.ShoppingCartItems)
-    {
-        <tr>
-            <td class="text-center">@line.Amount</td>
-            <td class="text-left">@line.Pie.Name</td>
-            <td class="text-right">@line.Pie.Price.ToString("c")</td>
-            <td class="text-right">
-                @((line.Amount * line.Pie.Price).ToString("c"))
-            </td>
-        </tr>
+<style>
+    #check {
+        color: #777777;
+        text-decoration: none;
+        vertical-align: middle;
     }
-    </tbody>
-    <tfoot>
-    <tr>
-        <td colspan="3" class="text-right">Total:</td>
-        <td class="text-right">
-            @Model.ShoppingCartTotal.ToString("c")
-        </td>
-    </tr>
-    </tfoot>
-</table>
+</style>
 
-@*<div progress-value="33">
-    </div>*@
+<div id="stepFormSteps">
+    <!-- Shopping Cart -->
+    <div id="step1" class="active">
+        <div class="row">
+            <div class="col-md-8 g-mb-30">
+                <!-- Products Block -->
+                <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
+                    <table class="text-center w-100">
+                        <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black text-uppercase">
+                            <tr>
+                                <th class="g-font-weight-400 text-left g-pb-20">Product</th>
+                                <th class="g-font-weight-400 g-width-130 g-pb-20">Price</th>
+                                <th class="g-font-weight-400 g-width-50 g-pb-20">Qty</th>
+                                <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
 
-<custom:div progress-value="33">
-    </custom:div>
+                        <tbody id="tableCart">
+                            @*@foreach (var line in Model.ShoppingCart.ShoppingCartItems)
+                            {
+                                <tr class="g-brd-bottom g-brd-gray-light-v3">
+                                    <td class="text-left g-py-25">
+                                        <img class="d-inline-block g-width-100 mr-4" src="@line.Pie.ImageThumbnailUrl" alt="Image Description">
+                                        <div class="d-inline-block align-middle">
+                                            <h4 class="h6 g-color-black">@line.Pie.Name</h4>
+                                            <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_6 mb-0">
+                                                <li>Color: Black</li>
+                                                <li>Size: MD</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td class="g-color-gray-dark-v2 g-font-size-13">@line.Pie.Price.ToString("c")</td>
+                                    <td>
+                                        <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                                            <input class="js-result form-control text-center g-font-size-13 rounded-0 g-pa-0" type="text" value="@line.Amount" readonly>
 
-<div class="text-center">
-    <a class="btn btn-primary" asp-controller="Order" asp-action="Checkout">Check out now!</a>
+                                            <div class="input-group-addon d-flex align-items-center g-width-30 g-brd-gray-light-v2 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
+                                                <!-- <a asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pieId="@line.Pie.PieId"> -->
+                                                <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
+                                                <!-- </a> -->
+                                                <!-- <a asp-controller="ShoppingCart" asp-action="RemoveFromShoppingCart" asp-route-pieId="@line.Pie.PieId"> -->
+                                                <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+                                                <!-- </a> -->
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right g-color-black">
+                                        <span class="g-color-gray-dark-v2 g-font-size-13 mr-4">@((line.Amount * line.Pie.Price).ToString("c"))</span>
+                                        <a asp-controller="ShoppingCart" asp-action="RemoveAllFromShoppingCart"
+                                           asp-route-pieId="@line.Pie.PieId">
+                                            <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer">
+                                                <i class="mt-auto fa fa-trash" id="js-del"></i>
+                                            </span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }*@
+                            <!-- Item-->
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Products Block -->
+            </div>
+
+            <div class="col-md-4 g-mb-30">
+                <!-- Summary -->
+                <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
+                    <h4 class="h6 text-uppercase mb-3">Summary</h4>
+
+                    <!-- Accordion -->
+                    <div id="accordion-01" class="mb-4" role="tablist" aria-multiselectable="true">
+                        <div id="accordion-01-heading-01" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
+                            <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                                <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-01-body-01" data-toggle="collapse" data-parent="#accordion-01" aria-expanded="false" aria-controls="accordion-01-body-01">
+                                    Estimate shipping
+                                    <span class="ml-3 fa fa-angle-down"></span>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="accordion-01-body-01" class="collapse" role="tabpanel" aria-labelledby="accordion-01-heading-01">
+                            <div class="g-py-10">
+                                <div class="mb-3">
+                                    <label class="d-block g-color-gray-dark-v2 g-font-size-13">Country</label>
+                                    <input id="inputGroup1" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="country" type="text" placeholder="United Kingdom" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="d-block g-color-gray-dark-v2 g-font-size-13">State/Province</label>
+                                    <input id="inputGroup2" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="stateProvince" type="text" placeholder="London" required>
+                                </div>
+                                <label class="d-block g-color-gray-dark-v2 g-font-size-13">ZIP/Postal Code</label>
+                                <input id="inputGroup3" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="zip" type="text" placeholder="e.g. AB123" required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Accordion -->
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="g-color-black">Subtotal</span>
+                        <span class="g-color-black g-font-weight-300" id="cartTotal"></span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="g-color-black">Order Total</span>
+                        <span class="g-color-black g-font-weight-300" id="cartTotal2"></span>
+                    </div>
+                </div>
+                <!-- End Summary -->
+
+                <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>
+                <a asp-controller="Order" asp-action="Checkout" id="check">
+                    <button class="btn btn-block u-btn-primary g-font-size-13 text-uppercase g-py-15 mb-4" type="button" data-next-step="#step2">Proceed to Checkout</button>
+                </a>
+
+                <a class="d-inline-block g-color-black g-color-primary--hover g-text-underline--none--hover mb-3" href="#!">
+                    <i class="mr-2 fa fa-info-circle"></i>Delivery
+                </a>
+
+                <!-- Accordion -->
+                <div id="accordion-02" role="tablist" aria-multiselectable="true">
+                    <div id="accordion-02-heading-02" role="tab">
+                        <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                            <a class="g-color-black g-text-underline--none--hover" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
+                                Apply discount code
+                                <span class="ml-3 fa fa-angle-down"></span>
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="accordion-02-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-02-heading-02">
+                        <div class="input-group rounded g-pt-15">
+                            <input class="form-control g-brd-gray-light-v1 g-brd-right-none g-color-gray-dark-v3 g-placeholder-gray-dark-v3" type="text" placeholder="Enter discount code">
+                            <span class="input-group-append g-brd-gray-light-v1 g-bg-white">
+                                <button class="btn u-btn-primary" type="submit">Apply</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Accordion -->
+            </div>
+        </div>
+    </div>
 </div>
+
+<script src="~/js/hs.core.js"></script>
+<script src="~/js/hs.count-qty.js"></script>
+<script>
+    $(document).ready(function () {
+        getShopping_Cart();
+        // initialization of quantity counter
+        $.HSCore.components.HSCountQty.init('.js-quantity');
+
+    });
+</script>

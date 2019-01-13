@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+﻿@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
 @model IEnumerable<IdentityRole>
 
@@ -10,16 +11,16 @@
 }
 else
 {
-    <table class="table table-condensed table-bordered">
+    <table class="table table-condensed table-bordered col-md-5">
         <tr>
-            <th>Role ID</th>
+            <!-- <th>Role ID</th> -->
             <th>Role name</th>
             <th>#Users</th>
         </tr>
         @foreach (var role in Model)
         {
             <tr>
-                <td>@role.Id</td>
+                @*<td>@role.Id</td>*@
                 <td>@role.Name</td>
                 <td>
                     <form asp-action="DeleteRole" asp-route-id="@role.Id" method="post">

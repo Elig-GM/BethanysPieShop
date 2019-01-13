@@ -1,0 +1,9 @@
+Add-Migration Initial
+Update-Database
+
+dotnet ef update Database
+
+Alt + Up | Dow = Desplazar Linea
+Ctrl + Click = Ir a Defincion
+
+ExprReg asp-[a-z]*|class

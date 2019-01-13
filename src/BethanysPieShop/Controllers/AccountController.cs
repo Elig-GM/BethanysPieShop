@@ -1,21 +1,24 @@
-﻿using System.Security.Claims;
+﻿using BethanysPieShop.Identity;
 using BethanysPieShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using BethanysPieShop.Auth;
 
 namespace BethanysPieShop.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager,
+            SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -34,6 +37,8 @@ namespace BethanysPieShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel loginViewModel)
         {
+            _userManager.GetUserName(User);
+            // _userManager.
             if (!ModelState.IsValid)
                 return View(loginViewModel);
 
@@ -41,7 +46,7 @@ namespace BethanysPieShop.Controllers
 
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(user, loginViewModel.Password, loginViewModel.RememberMe, false);
                 if (result.Succeeded)
                 {
                     if (string.IsNullOrEmpty(loginViewModel.ReturnUrl))
@@ -49,13 +54,189 @@ namespace BethanysPieShop.Controllers
 
                     return Redirect(loginViewModel.ReturnUrl);
                 }
-            }
+            }   
 
             ModelState.AddModelError("", "Username/password not found");
             return View(loginViewModel);
         }
 
+        // public IActionResult Manager(string returnUrl)
+        // {
+        //     var user = _userManager.GetUserAsync(User);
+        //     if (user == null)
+        //     {
+        //         return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+        //     }
 
+        //     var userName = _userManager.GetUserNameAsync(user);
+        //     var email = _userManager.GetEmailAsync(user);
+        //     var phoneNumber = _userManager.GetPhoneNumberAsync(user);
+
+        //     var input = new InputModel
+        //     {
+        //         Email = email,
+        //         PhoneNumber = phoneNumber
+        //     };
+
+        //     var vm = new UserViewModel() { Id = user.Id, Email = user.Email, UserName = user.UserName, UserClaims = claims.Select(c => c.Value).ToList() };
+
+        //     return View(vm);
+        //     // return View();
+        // }
+
+        [Route("Account/Profile")]
+        public async Task<IActionResult> Profile()
+        {
+            // var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if (user == null)
+                return RedirectToAction("Index", "Home");
+
+            // var input = new UserViewModel.InputModel
+            // {
+            //     FirstName = user.FirstName,
+            //     LastName = user.LastName,
+            //     Email = user.Email,
+            //     PhoneNumber = user.PhoneNumber
+            // };
+
+            var EmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            var vm = new UserViewModel() 
+            {
+                Username = user.UserName, 
+                Role = roles[0], 
+                IsEmailConfirmed = EmailConfirmed, 
+                Input = new UserViewModel.InputModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber
+                }
+            };
+
+            return View(vm);
+        }
+
+        [Route("Account/Manage")]
+        // [ViewComponent = ""]
+        [HttpGet]
+        public async Task<IActionResult> Manage()
+        {
+            // var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.GetUserAsync(User);
+            
+            if (user == null)
+                return RedirectToAction("Index", "Home");
+
+            // var input = new UserViewModel.InputModel
+            // {
+            //     FirstName = user.FirstName,
+            //     LastName = user.LastName,
+            //     Email = user.Email,
+            //     PhoneNumber = user.PhoneNumber
+            // };
+
+            var EmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            var vm = new UserViewModel() 
+            {
+                Username = user.UserName, 
+                IsEmailConfirmed = EmailConfirmed, 
+                Input = new UserViewModel.InputModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    PhoneNumber = user.PhoneNumber
+                }
+            };
+
+            return View(vm);
+        }
+
+        // [Route(Manager/Index)]
+        [HttpPost]
+        public async Task<IActionResult> Manage(UserViewModel userViewModel)
+        {
+            // var user = await _userManager.FindByIdAsync(userViewModel.Id);
+            var user = await _userManager.GetUserAsync(User);
+
+            if (user != null)
+            {
+                user.Email = userViewModel.Input.Email;
+                user.FirstName = userViewModel.Input.FirstName;
+                user.LastName = userViewModel.Input.LastName;
+                user.PhoneNumber = userViewModel.Input.PhoneNumber;
+
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                    return RedirectToAction("Index", "Home");
+
+               foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
+                return View(userViewModel);
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> ChangePassword(){
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var hasPassword = await _userManager.HasPasswordAsync(user);
+            if (!hasPassword)
+            {
+                return RedirectToPage("./SetPassword");
+            }
+            var vm = new ChangePasswordViewModel() {StatusMessage = ""};
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel changePassword){
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            var changePasswordResult = await _userManager.ChangePasswordAsync(user, changePassword.Input.OldPassword, changePassword.Input.NewPassword);
+            if (!changePasswordResult.Succeeded)
+            {
+                foreach (var error in changePasswordResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                changePassword.StatusMessage = "";
+                return View(changePassword);
+            }
+
+            await _signInManager.RefreshSignInAsync(user);
+            // _logger.LogInformation("User changed their password successfully.");
+            changePassword.StatusMessage = "Your password has been changed.";
+
+            // return RedirectToPage();
+
+            return View(changePassword);
+        }
+
+
+        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
@@ -63,19 +244,26 @@ namespace BethanysPieShop.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(LoginViewModel loginViewModel)
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = loginViewModel.UserName };
-                var result = await _userManager.CreateAsync(user, loginViewModel.Password);
+                var user = new AppUser() { UserName = registerViewModel.UserName, Email = registerViewModel.Email };
+                var result = await _userManager.CreateAsync(user, registerViewModel.Password);
+                await _userManager.AddToRoleAsync(user, "Users");
 
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
             }
-            return View(loginViewModel);
+            
+            return View(registerViewModel);
         }
 
         [HttpPost]
@@ -83,65 +271,6 @@ namespace BethanysPieShop.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        public IActionResult GoogleLogin(string returnUrl = null)
-        {
-            var redirectUrl = Url.Action("GoogleLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(ExternalLoginServiceConstants.GoogleProvider, redirectUrl);
-            return Challenge(properties, ExternalLoginServiceConstants.GoogleProvider);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> GoogleLoginCallback(string returnUrl = null, string serviceError = null)
-        {
-            if (serviceError != null)
-            {
-                ModelState.AddModelError(string.Empty, $"Error from external provider: {serviceError}");
-                return View(nameof(Login));
-            }
-
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-            if (info == null)
-            {
-                return RedirectToAction(nameof(Login));
-            }
-
-            var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
-            if (result.Succeeded)
-            {
-                if (returnUrl == null)
-                    return RedirectToAction("index", "home");
-
-                return Redirect(returnUrl);
-            }
-
-            var user = new ApplicationUser
-            {
-                Email = info.Principal.FindFirst(ClaimTypes.Email).Value,
-                UserName = info.Principal.FindFirst(ClaimTypes.Email).Value
-            };
-
-            var identityResult = await _userManager.CreateAsync(user);
-
-            if (!identityResult.Succeeded) return AccessDenied();
-
-            identityResult = await _userManager.AddLoginAsync(user, info);
-
-            if (!identityResult.Succeeded) return AccessDenied();
-
-            await _signInManager.SignInAsync(user, false);
-
-            if (returnUrl == null)
-                return RedirectToAction("index", "home");
-
-            return Redirect(returnUrl);
         }
     }
 }

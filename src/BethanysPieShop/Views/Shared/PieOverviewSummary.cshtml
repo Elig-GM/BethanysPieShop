@@ -1,20 +1,57 @@
 ﻿@model Pie
 
-<div class="col-sm-4 col-lg-4 col-md-4">
-    <div class="thumbnail">
-        <img src="@Model.ImageThumbnailUrl" alt="">
-        <div class="caption">
-            <h3 class="pull-right">@Model.Price.ToString("c")</h3>
-            <h3>
-                <a asp-controller="Pie" asp-action="Details" asp-route-id="@Model.PieId">@Model.Name</a>
-            </h3>
-            <p>@Model.ShortDescription</p>
-        </div>
-        <div class="addToCart">
-            <p class="button">
-                <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToShoppingCart"
-                   asp-route-pieId="@Model.PieId">Add to cart</a>
-            </p>
+@if(@Model.InStock == false){
+    <div class="card-group col-lg-4 col-md-4 col-sm-6 px-2">
+        <div class="card box-shadow mb-4" style="border-radius: 0.15rem;">
+            <div class="img__wrapper">
+                <img class="card-img-top" style="filter: grayscale(100%);" src="@Model.ImageThumbnailUrl" alt="">
+                <a class="sold_out text-white" style="top: 1em; left: -4.2em; padding: 0.5em 3em 0.4em 4em;">Sold out</a>
+            </div>
+            <div class="card-body pb-0" style="filter: grayscale(100%);" >
+                <!-- <div class="caption"> -->
+                <h3 class="float-right">@Model.Price.ToString("c")</h3>
+                <h5 class="card-title">
+                    <a asp-controller="Pie" asp-action="Details" asp-route-id="@Model.PieId">@Model.Name</a>
+                </h5>
+                <p>@Model.ShortDescription</p>
+                <!-- </div> -->
+            </div>
+            <div class="mb-2 text-center">
+                <button data-id="@Model.PieId" disabled style="border-radius: 0.15rem; filter: grayscale(100%);" onclick="addToShoppingCart(@Model.PieId)" class="btn btn-primary btn-sm edit"> 
+                    Add to cart
+                </button>
+                <button class="btn text-white btn-danger btn-sm" style="border-radius: 0.15rem;"> 
+                    <i id="like" class="fa fa-heart"></i> 
+                    Like
+                </button>
+            </div>
         </div>
     </div>
-</div>
+}else{
+    <div class="card-group col-lg-4 col-md-4 col-sm-6 px-2">
+        <div class="card box-shadow mb-4" style="border-radius: 0.15rem;">
+            <div class="img__wrapper">
+                <img class="card-img-top" src="@Model.ImageThumbnailUrl" alt="" >
+            </div>
+            <div class="card-body pb-0" id="cardbody">
+                <!-- <div class="caption"> -->
+                <h3 class="float-right">@Model.Price.ToString("c")</h3>
+                <h5 class="card-title">
+                    <a asp-controller="Pie" asp-action="Details" asp-route-id="@Model.PieId">@Model.Name</a>
+                </h5>
+                <p>@Model.ShortDescription</p>
+                <!-- </div> -->
+            </div>
+            <div class="mb-2 text-center">
+                <button data-id="@Model.PieId" style="border-radius: 0.15rem;" onclick="addToShoppingCart(@Model.PieId)" class="btn btn-primary btn-sm edit"> 
+                    Add to cart
+                </button>
+                <button class="btn text-white btn-danger btn-sm" style="border-radius: 0.15rem;"> 
+                    <i id="like" class="fa fa-heart"></i> 
+                    Like
+                </button>
+            </div>
+        </div>
+    </div>
+}
+<!-- <script src="~/js/cart-crud.js"></script> -->

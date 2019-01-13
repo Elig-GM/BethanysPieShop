@@ -1,0 +1,27 @@
+mt-# = margin top
+mb-# = margin botton
+
+my-auto = All margin auto[Center]
+mr-auto
+ml-auto
+
+@foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName @user.LastName</td>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@user.PhoneNumber</td>
+
+                <td>
+                    <form asp-action="DeleteUser" asp-route-userId="@user.Id" method="post" class="p-0 m-0">
+                        <a class="btn btn-sm btn-primary" asp-action="EditUser" asp-route-id="@user.Id">
+                            <i class="far fa-edit"></i> Edit
+                        </a>
+                        <button type="submit" onclick="return confirm('Do you really want to delete this user?');" class="btn btn-sm btn-danger">
+                            <i class="far fa-trash-alt"></i> Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+}

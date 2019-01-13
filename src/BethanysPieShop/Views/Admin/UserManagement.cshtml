@@ -1,8 +1,205 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Identity.EntityFrameworkCore
-@model IEnumerable<BethanysPieShop.Auth.ApplicationUser>
+@model IEnumerable<BethanysPieShop.Identity.AppUser>
+<style>
 
-<h2>User management</h2>
+    div.dataTables_wrapper div.dataTables_info {
+        display: none;
+    }
+
+    .btn {
+        font-weight: 100;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #235387;
+        border-color: #235387;
+    }
+</style>
+<div class="clearfix pb-3">
+    <h2 class="float-left">User management</h2>
+    <!-- <button id="addUser" type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalAddUser"> -->
+    <a class="btn btn-primary float-right py-1 px-2" asp-action="AddUser" data-toggle="modal" data-target="#modalAddUser">
+        <i class="fas fa-user-plus"></i> Add
+    </a>
+    <!-- </button> -->
+</div>
+<!-- Bootstrap Modal (ADD) -->
+<div class="modal fade" id="modalAddUser" tabindex="-1" role="dialog" aria-labelledby="myModalAddUserLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title float-left" id="myModalAddUserLabel">Add new user</h4>
+                <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <!-- Bootstrap form -->
+                <form id="AddUserForm">
+                    <!--<input type="hidden" id="UserID" value="" />-->
+                    <div class="form-group">
+                        <label for="FirstName">First Name</label>
+                        <input type="text" class="form-control" type="text" name="Input[FirstName]" placeholder="First Name">
+                        <span id="errorFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Last Name</label>
+                        <input type="text" class="form-control" type="text" name="Input[LastName]" placeholder="Last Name">
+                        <span id="errorLastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName"> User Name</label>
+                        <input for="UserName" class="form-control" name="UserName" placeholder="User Name" />
+                        <span id="errorUserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email"> Email </label>
+                        <input for="Email" class="form-control" type="email" name="Email" placeholder="Email" />
+                        <span  id="errorEmail" class="text-danger"></span>
+                        <!-- <span asp-validation-for="Email" class="text-danger"></span> -->
+                    </div>
+                    <div class="form-group">
+                        <label for="Password"> Password </label>
+                        <input for="Password" class="form-control" type="password" name="Password" placeholder="Password" />
+                        <span id="errorPassword" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Input.PhoneNumber"> Phone Number</label>
+                        <input for="Input.PhoneNumber" class="form-control" type="tel" name="Input[PhoneNumber]" placeholder="Phone Number" />
+                        <span id="errorPhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Birthdate"> Birthdate </label>
+                        <input type="date" for="Birthdate" name="Birthdate" class="form-control" placeholder="Date of Birth" />
+                        <span id="errorBirthdate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="State"> State </label>
+                        <!-- <input for="State" class="form-control" /> -->
+                        <select class="form-control" for="State" name="State">
+                            <option value="">N/A</option>
+                            <option value="Colombia">Colombia</option>
+                        </select>
+                        <span id="errorState" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="City"> City</label>
+                        <!-- <input for="City" class="form-control" /> -->
+                        <select class="form-control" for="City" name="City">
+                            <option value="">N/A</option>
+                            <option value="Medellin">Medellin</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Bogotá">Bogotá</option>
+                        </select>
+                        <span id="errorCity" class="text-danger"></span>
+                    </div>
+                    <span id="errorAll" class="text-danger"></span>
+                    <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                    <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                </form>
+                <!-- End Bootstrap form -->
+            </div>
+            <div class="modal-footer">
+                <button id="cancelAddButton" type="reset" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button id="submitAddButton" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Bootstrap modal -->
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="modalEditUser" tabindex="-1" role="dialog" aria-labelledby="myModalEditLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title float-left" id="myModalEditLabel">Edit User Details</h4>
+                <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <!-- Bootstrap form -->
+                <form id="EditUserForm">
+                    <input type="hidden" id="Id" value="" />
+                    <div class="form-group">
+                        <label for="FirstName">First Name</label>
+                        <input for="FirstName" class="form-control" name="Input[FirstName]" placeholder="First Name">
+                        <span id="errorFirstName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Last Name</label>
+                        <input class="form-control" name="Input[LastName]" placeholder="Last Name">
+                        <span id="errorLastName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName"> User Name</label>
+                        <input for="UserName" class="form-control" name="UserName" placeholder="User Name" />
+                        <span id="errorUserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Email"> Email </label>
+                        <input for="Email" class="form-control" name="Email" placeholder="Email" />
+                        <span  id="errorEmail" class="text-danger"></span>
+                    </div>
+                    <!-- <div class="form-group"> -->
+                        <!-- <label for="Password"> Password </label> -->
+                        <!-- <input for="Password" class="form-control" type="password" name="password" placeholder="Password" /> -->
+                        <!-- <span asp-validation-for="Password" class="text-danger"></span> -->
+                    <!-- </div> -->
+                    <div class="form-group">
+                        <label for="Input[PhoneNumber]"> Phone Number</label>
+                        <input for="Input[PhoneNumber]" class="form-control" name="Input[PhoneNumber]" placeholder="Phone Number" />
+                        <span id="errorPhoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="Birthdate"> Birthdate </label>
+                        <input type="date" for="Birthdate" name="Birthdate" class="form-control" placeholder="Date of Birth" />
+                        <span id="errorBirthdate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group"> 
+                        <label for="Claims">Tags</label>
+                        <select class="form-control" id="Claims" name="Claims" multiple>
+                            <option value="sales">Sales</option>
+                            <option value="promo">Promo</option>
+                            <option value="new">New</option>
+                            <option value="old">Old</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="State"> State </label>
+                        <!-- <input for="State" class="form-control" /> -->
+                        <select class="form-control" for="State" name="State">
+                            <option value="">N/A</option>
+                            <option value="Colombia">Colombia</option>
+                        </select>
+                        <span id="errorState" class="text-danger"></span>
+                    </div>
+                    <a id="claim" class="btn btn-primary">Manage claims for this user</a>
+
+                    <div class="form-group">
+                        <label for="City"> City</label>
+                        <!-- <input for="City" class="form-control" /> -->
+                        <select class="form-control" for="City" name="City">
+                            <option value="">N/A</option>
+                            <option value="Medellin">Medellin</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Bogotá">Bogotá</option>
+                        </select>
+                        <span id="errorCity" class="text-danger"></span>
+                    </div>
+""
+                    <!-- Allow form submission with keyboard without duplicating the dialog button -->
+                    <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+                </form>
+                <!-- End Bootstrap form -->
+            </div>
+            <div class="modal-footer">
+                <button id="cancelEditButton" type="reset" class="btn btn-link" data-dismiss="modal">Close</button>
+                <button id="submitEditButton" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-floppy-save"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Bootstrap modal -->
 
 @if (!Model.Any())
 {
@@ -10,35 +207,34 @@
 }
 else
 {
-    <table class="table table-condensed table-bordered" header header-content="User Management">
-        <tr>
-            <th>User ID</th>
-            <th>User name</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-
-        @foreach (IdentityUser user in Model)
-        {
+    <table id="example" class="table table-striped table-bordered" style="width:100%" header header-content="User Management">
+        <thead>
             <tr>
-                <td>@user.Id</td>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-
-                <td>
-                    <form asp-action="DeleteUser" asp-route-id="@user.Id" method="post">
-                        <a class="btn btn-sm btn-primary" asp-action="EditUser" asp-route-id="@user.Id">Edit</a>
-                        <button type="submit" onclick="return confirm('Do you really want to delete this user?');" class="btn btn-sm btn-danger">
-                            Delete
-                        </button>
-                    </form>
-                </td>
+                <th>Name</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>Actions</th>
             </tr>
-        }
+        </thead>
+        <tbody></tbody>
     </table>
 }
 
 <p>
     @*<a class="btn btn-primary" asp-action="AddUser">Add new user</a>*@
-    <a anchor-style="primary" asp-action="AddUser">Add new user</a>
+    <!-- <a anchor-style="primary" asp-action="AddUser">Add new user</a> -->
 </p>
+<script src="~/js/jquery.html-template.js"></script>
+<script src="~/js/toastr.min.js"></script>
+<script src="~/js/jquery.serializejson.js"></script>
+<script type="text/javascript" src="~/js/table-users.js"></script>
+<script src="~/js/users-crud.js"></script>
+<script>
+    $('#claim').on("click",
+    function () {
+        
+        var uId = document.getElementById('Id').value
+        $.get('@Url.Action("ManageClaimsForUser","Admin")', {userId: uId});
+    });
+</script>

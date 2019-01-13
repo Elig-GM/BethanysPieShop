@@ -1,0 +1,58 @@
+@using BethanysPieShop.NavPages
+@using BethanysPieShop.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject SignInManager<AppUser> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<div class="mb-4"> 
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <a class="nav-link" asp-controller="Account"  asp-action="Manage">
+            Profile
+        </a>
+        <a class="nav-link" asp-controller="Account" asp-action="ChangePassword">
+            Password
+        </a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('a.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('a').addClass('active'); 
+    });
+</script>
+
+
+<!-- <ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" asp-controller="Account" asp-action="Manage">
+            Profile
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-controller="Account" asp-action="ChangePassword">
+            Password
+        </a>
+    </li> -->
+    <!-- @if (hasExternalLogins)
+    {
+        <li class="nav-item">
+            <a class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" id="external-login" asp-page="./ExternalLogins">
+                External logins
+            </a>
+        </li>
+    }
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" asp-page="./TwoFactorAuthentication">
+            Two-factor authentication
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" asp-page="./PersonalData">
+            Personal data
+        </a>
+    </li> -->
+<!-- </ul> -->

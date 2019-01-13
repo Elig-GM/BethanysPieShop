@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<BethanysPieShop.Components.AdminMenuItem>
 
-<li class="dropdown">
+<li class="nav-item dropdown">
     <a asp-controller="Admin"
        asp-action="Index"
-       class="dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
-    <ul class="dropdown-menu">
+       class="nav-link dropdown-toggle" data-toggle="dropdown">Admin<b class="caret"></b></a>
+    <div class="dropdown-menu border-0" aria-labelledby="navbarDropdown">
         @foreach (var menuItem in Model)
         {
-            <li>
-                <a asp-controller="Admin" asp-action=@menuItem.ActionValue
+            <!-- <li> -->
+                <a class="dropdown-item" asp-controller="Admin" asp-action=@menuItem.ActionValue
                 >@menuItem.DisplayValue</a>
-            </li>
+            <!-- </li> -->
         }
-    </ul>
+    </div>
 </li>

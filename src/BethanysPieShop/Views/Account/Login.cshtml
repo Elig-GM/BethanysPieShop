@@ -1,76 +1,118 @@
-﻿@using System.Threading.Tasks
-@using BethanysPieShop.Auth
-@using Microsoft.AspNetCore.Identity
-@model LoginViewModel
+﻿@model LoginViewModel
 
-@inject SignInManager<ApplicationUser> SignInManager
+@{
+    Layout = null;
+    ViewData["Title"] = "Login";
+}
 
-<h2>Please log in before placing an order.</h2>
+<style>
+    html,
+    body {
+        height: 100%;
+    }
 
-<h3>Login using an account on Bethany's Pie Shop...</h3>
-<form asp-controller="Account" asp-action="Login" method="post" class="form-horizontal" role="form">
-    <h4>Enter your details below</h4>
-    <hr />
-    <input type="hidden" asp-for="ReturnUrl" />
-    <div asp-validation-summary="All" class="text-danger"></div>
+    body {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-align: center;
+        align-items: center;
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: #f5f5f5;
+    }
 
-    <div class="form-group">
-        <label asp-for="UserName" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
+    .form-signin {
+        width: 100%;
+        max-width: 330px;
+        padding: 15px;
+        margin: auto;
+    }
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-primary" value="Log in" />
-        </div>
-    </div>
-
-</form>
-
-<div class="col-md-12">
-    <section>
-        <h4>Or use another service to log in!</h4>
-        @{
-            var loginProviders = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-            if (loginProviders.Count == 0)
-            {
-                <div>
-                    <p>
-                        There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                        for details on setting up this ASP.NET application to support logging in via external services.
-                    </p>
-                </div>
-            }
-            else
-            {
-
-                <a class="btn btn-info" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl">
-                    Google
-                </a>
-
-                @*<form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in loginProviders)
-                                {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
-                                }
-                            </p>
-                        </div>
-                    </form>*@
-            }
+        .form-signin .checkbox {
+            font-weight: 400;
         }
-    </section>
-</div>
 
+        .form-signin .form-control {
+            position: relative;
+            box-sizing: border-box;
+            height: auto;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+            .form-signin .form-control:focus {
+                z-index: 2;
+            }
+
+        .form-signin input[type="text"] {
+            margin-bottom: -1px;
+            border-bottom-right-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .form-signin input[type="password"] {
+            margin-bottom: 10px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+</style>
+
+<!DOCTYPE html>
+<html>
+<header>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bethany's Pie Shop -  @ViewData["Title"]</title>
+    <link rel="icon" href="~/images/bethanylogo.png">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+</header>
+
+
+
+<body class="text-center">
+    <!-- <form class="form-signin"> -->
+    <form asp-controller="Account" asp-action="Login" method="post" class="form-signin" role="form">
+        <input type="hidden" asp-for="ReturnUrl" />
+        <div class="text-center mb-4">
+            <a asp-controller="Home" asp-action="Index"> 
+                <img class="mb-4" src="~/images/bethanylogo.png" alt="" width="72" height="72">
+            </a>
+            <h1 class="h3 mb-3 font-weight-normal">Login</h1>
+            <p>Please log in before placing an order.</p>
+        </div>
+        <hr>
+        <label asp-for="UserName" class="sr-only">User Name</label>
+        <input asp-for="UserName" class="form-control" type="text" placeholder="User Name"
+               required autofocus />
+        <!-- <span asp-validation-for="UserName" class="text-danger"></span> -->
+
+        <label asp-for="Password" class="sr-only">Password</label>
+        <input asp-for="Password" class="form-control" type="password" placeholder="Password"
+               required />
+        <!-- <span asp-validation-for="Password" class="text-danger"></span> -->
+
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="checkbox mb-3">
+            <label asp-for="RememberMe">
+                <input type="checkbox" asp-for="RememberMe">
+                @Html.DisplayNameFor(m => m.RememberMe)
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+        <p class="create-account-callout mt-3">
+            New to Bethany's Pie Shop?
+            <a data-ga-click="Sign in, switch to sign up" href="/Account/Register">Create an account</a>.
+        </p>
+        <hr />
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p>&copy; 2018 - EliG MosQera</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </form>
+</body>
+</html>

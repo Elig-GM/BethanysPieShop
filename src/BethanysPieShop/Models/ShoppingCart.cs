@@ -44,14 +44,14 @@ namespace BethanysPieShop.Models
                 {
                     ShoppingCartId = ShoppingCartId,
                     Pie = pie,
-                    Amount = 1
+                    Amount = amount
                 };
 
                 _appDbContext.ShoppingCartItems.Add(shoppingCartItem);
             }
             else
             {
-                shoppingCartItem.Amount++;
+                shoppingCartItem.Amount += amount;
             }
             _appDbContext.SaveChanges();
         }
@@ -82,6 +82,20 @@ namespace BethanysPieShop.Models
             return localAmount;
         }
 
+        public void RemoveAllFromCart(Pie pie)
+        {
+            var shoppingCartItem =
+                    _appDbContext.ShoppingCartItems.SingleOrDefault(
+                        s => s.Pie.PieId == pie.PieId && s.ShoppingCartId == ShoppingCartId);
+
+            if (shoppingCartItem != null)
+            {
+                _appDbContext.ShoppingCartItems.Remove(shoppingCartItem);
+            }
+
+            _appDbContext.SaveChanges();
+        }
+
         public List<ShoppingCartItem> GetShoppingCartItems()
         {
             return ShoppingCartItems ??
@@ -109,6 +123,31 @@ namespace BethanysPieShop.Models
             var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)
                 .Select(c => c.Pie.Price * c.Amount).Sum();
             return total;
+        }
+
+        public decimal GetShoppingCartCount()
+        {
+            var total = _appDbContext.ShoppingCartItems.Count(c => c.ShoppingCartId == ShoppingCartId);
+            return total;
+        }
+        public decimal GetShoppingCartCountTotal()
+        {
+            var total = _appDbContext.ShoppingCartItems.Where(c => c.ShoppingCartId == ShoppingCartId)
+                .Select(c => c.Amount).Sum();
+            return total;
+        }
+
+        public void SetPieStock()
+        {
+            foreach (var item in GetShoppingCartItems())
+            {
+                var pie = item.Pie;
+                pie.Stock -= item.Amount;
+                pie.InStock = pie.Stock == 0? false : true;
+                _appDbContext.Pies.Update(pie);
+            }
+
+            _appDbContext.SaveChanges();
         }
     }
 }

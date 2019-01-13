@@ -1,27 +1,134 @@
-﻿@*@model PiesListViewModel
+﻿@model PiesListViewModel
 
 @ViewBag.CurrentCategory
-@foreach (var pie in Model.Pies)
-{
-    @Html.Partial("PieOverviewSummary", pie)
-}*@
 
-<div id="pieDiv">
 
+<style>
+    button#dropdownMenu2.btn.btn-secondary.dropdown-toggle {
+        color: black;
+        background-color: #f8f9fa;
+        border-color: transparent;
+    }
+
+    .show > .btn-secondary.dropdown-toggle:focus {
+        box-shadow: 0 0 0 0.2rem #383d411c;
+    }
+
+    .btn-secondary:focus {
+        box-shadow: 0 0 0 0.1rem rgba(108, 117, 125, 0.21);
+    }
+    @@media (max-width: 991px) { 
+        nav.list-group.catmenu{
+            display: none;
+        }
+    }
+    .list-group-item.active {
+        z-index: 2;
+        color: #212529;
+        background-color: #f8f9fa;
+        border-color: #f8f9fa;
+    }
+</style>
+
+
+<div class="breadcrumb-container d-none d-md-block">
+    <ol class="breadcrumb" itemscope="" style="background-color: #e9ecef54; font-size: 12;" itemtype="http://schema.org/BreadcrumbList">
+        <li class="breadcrumb-item" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+            <a class="text-dark" asp-controller="Home" asp-action="Index" title="Top" itemprop="url">
+                <meta itemprop="title" content="Home page">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item active" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+            <span itemprop="title" dir="auto">Pies</span>
+        </li>
+    </ol>
+</div>
+
+<div class="row d-flex justify-content-center">
+    <div class="col-lg-3">
+        <!-- <nav class="list-group catmenu">
+            <div class="list-group-item active catmenu-path-item">
+                <span class="has-count" data-count="25">Categories</span>
+            </div>
+            <a class="list-group-item list-group-item-action catmenu-item" asp-controller="Pie" asp-action="List" asp-route-category="Fruit pies">
+                <span class="has-count" data-count="4">Fruit pies</span>
+            </a>
+
+            <a class="list-group-item list-group-item-action catmenu-item" asp-controller="Pie" asp-action="List" asp-route-category=Cheese cakes">
+                <span class="has-count" data-count="4">Cheese cakes</span>
+            </a>
+
+            <a class="list-group-item list-group-item-action catmenu-item" asp-controller="Pie" asp-action="List" asp-route-category="Seasonal pies">
+                <span class="has-count" data-count="4">Seasonal pies</span>
+            </a>
+        </nav> -->
+    </div>
+    <div class="col-lg-9">
+        <h4 class="pb-2">All</h4>
+        <div class="row col-12 mb-3 mx-0 px-0">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" style="border-radius: 0.15rem;" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Sort
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2" style="border: 0.5px solid #e9ecef">
+                    <button class="dropdown-item" type="button">
+                        <a asp-controller="Home" asp-action="Index" style="text-decoration: none; color: black">
+                            Nombre - Acendente
+                        </a>
+                    </button>
+                    <button class="dropdown-item" type="button">
+                        <a asp-controller="Home" asp-action="Index" style="text-decoration: none; color: black">
+                            Nombre - Decendente
+                        </a>
+                    </button>
+                    <button class="dropdown-item" type="button">
+                        <a asp-controller="Home" asp-action="Index" style="text-decoration: none; color: black">
+                            Precio - Acendente
+                        </a>
+                    </button>
+                    <button class="dropdown-item" type="button">
+                        <a asp-controller="Home" asp-action="Index" style="text-decoration: none; color: black">
+                            Precio - Decendente
+                        </a>
+                    </button>
+                </div>
+            </div>
+            <div class="ml-auto">
+                <button class="btn btn-light" style="border-radius: 0.15rem;">
+                    <i class="fa fa-list py-1"></i>
+                </button>
+
+            </div>
+        </div>
+        <div class="dropdown-divider mb-2"></div>
+        <div class="row px-2">
+
+            @foreach (var pie in Model.Pies)
+            {
+                @*@Html.Partial("PieOverviewSummary", pie)*@
+                <partial name="PieOverviewSummary" , for="@pie" />
+            }
+        </div>
+    </div>
 
 </div>
+<!-- <div class="row" id="pieDiv">
+
+
+</div> -->
 
 @section scripts{
 
     <script>
 
         $(document).ready(function () {
-            LoadMorePies();
+            LoadMorePies(false);
         });
 
         $(window).scroll(function () {
             if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-                LoadMorePies();
+                LoadMorePies(true);
             }
         });
 
@@ -39,23 +146,23 @@
 
                     $.each(jsonData, function (index, pie) {
 
-                        var PieSummarString = '<div class="col-sm-4 col-lg-4 col-md-4"> ' +
-                                              '  <div class="thumbnail">' +
-                                              '     <img src="' + pie.imageThumbnailUrl + '" alt="">' +
-                                              '      <div class="caption">' +
-                                              '         <h3 class="pull-right">' + pie.price + '</h3>' +
-                                              '         <h3>' +
-                                              '             <a href=/Pie/Details/' + pie.pieId + '>' + pie.name + '</a>' +
-                                              '         </h3>' +
-                                              '         <p>' + pie.shortDescription + '</p>' +
-                                              '    </div>' +
-                                              '    <div class="addToCart">' +
-                                              '        <p class="button">' +
-                                              '             <a class="btn btn-primary" href=/ShoppingCart/AddToShoppingCart?pieId=' + pie.pieId + '>Add to cart</a>' +
-                                              '         </p>' +
-                                              '     </div>' +
-                                              '  </div>' +
-                                              '</div>';
+                        var PieSummarString = '<div class="col-sm-3 col-lg-3 col-md-3"> ' +
+                            '  <div class="card mb-3">' +
+                            '<a href=/Pie/Details/' + pie.pieId + '>' +
+                            '         <img class="card-img-top" src="' + pie.imageThumbnailUrl + '" alt="">' +
+                            '</a>' +
+                            '      <div class="caption">' +
+                            '         <h3 class="float-right">' + pie.price + '</h3>' +
+                            '         <h5>' +
+                            '             <a href=/Pie/Details/' + pie.pieId + '>' + pie.name + '</a>' +
+                            '         </h5>' +
+                            '         <p>' + pie.shortDescription + '</p>' +
+                            '    </div>' +
+                            '    <div class="text-center">' +
+                            '         <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pieId=' + pie.pieId + '>Add to cart</a>' +
+                            '     </div>' +
+                            '  </div>' +
+                            '</div>';
 
                         $('#pieDiv').append(PieSummarString);
                     });

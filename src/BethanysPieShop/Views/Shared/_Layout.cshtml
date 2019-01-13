@@ -1,116 +1,202 @@
-﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
-
-@using System.Security.Claims
-@using System.Threading.Tasks
-@using BethanysPieShop.Auth
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Http
+﻿@using BethanysPieShop.NavPages
+@using BethanysPieShop.Identity
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Identity.EntityFrameworkCore
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IAuthorizationService AuthorizationService
-@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<!-- STYILE -->
+<style>
+    
+    .site-header {
+        background-color: #a593c2;
+        /*-webkit-backdrop-filter: saturate(180%) blur(20px);*/
+        /*backdrop-filter: saturate(180%) blur(20px);*/
+    }
+
+        .site-header a {
+            color: #fff;
+            transition: ease-in-out color .15s;
+        }
+
+            .site-header a:hover {
+                color: rgba(0, 0, 0, .85);
+                text-decoration: none;
+            }
+
+        .site-header .navbar-brand:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .site-header .dropdown-item {
+            color: rgba(0, 0, 0, .85);
+            text-decoration: none;
+        }
+
+
+    /*.navbar-brand {
+        display: inline-block;
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
+        margin-right: inherit;
+        font-size: 1.25rem;
+        line-height: inherit;
+        white-space: nowrap;
+    }*/
+    
+    
+</style>
+<!-- END STYLE -->
 
 <!DOCTYPE html>
-
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Bethany's Pie Shop - @ViewData["Title"]</title>
+    <link rel="icon" href="~/images/bethanylogo.png">
+
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
-    @*<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/shoppingcart_navbar.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/form.css" />
+    <link rel="stylesheet" href="~/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="~/css/toastr.min.css" />
 
-    <title>@ViewBag.PageTitle</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+            crossorigin="anonymous"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.dataTables.min.js"></script>
+    <script src="~/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/toastr.min.js"></script>
+    <script src="~/js/cart-crud.js"></script>
 
-    <link rel="stylesheet" href="//ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-          asp-fallback-href="lib/bootstrap/dist/css/bootstrap.min.css"
-          asp-fallback-test-class="hidden"
-          asp-fallback-test-property="visibility"
-          asp-fallback-test-value="hidden" />
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> -->
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
 
-    <link href="~/Content/site.css" rel="stylesheet" />
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script asp-src-include="lib/jquery/dist/jquery.js"></script>
-    <script asp-src-include="lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script asp-src-include="lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-    <script asp-src-include="Scripts/**/*.js"
-            asp-src-exclude="Scripts/TempScripts/*.js"></script>
-
-    <title>Bethany's Pie Shop</title>
-    @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
+
 <body>
-
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                    
-                    <cache expires-sliding="@TimeSpan.FromSeconds(10)">
-                        @await Component.InvokeAsync("CategoryMenu")
-                    </cache>
-
-                    <li condition="SignInManager.IsSignedIn(User)"><a asp-controller="PieGift" asp-action="Index">Send a pie</a></li>
-
-                    <li><a asp-controller="Contact" asp-action="Index">Contact us</a></li>
-                    <li><a asp-controller="Home" asp-action="Index" asp-area="Promo">Promotions</a></li>
-                    @await Component.InvokeAsync("ShoppingCartSummary")
-
+    <!-- NAVGATION -->
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light py-0">
+        <div class="container body-content">
+            <button class="navbar-toggler p-1 border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand mr-auto mr-lg-0 p-2" style="font-size: 1.5rem;" asp-controller="Home" asp-action="Index">Bethany's Pie</a>
+            <li class="nav-item dropdown p-1" id="li-NavCart"></li>
+            <ul class="navbar-nav">
+                <partial name="_LoginPartialM" />
+            </ul>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" id="homeNI" asp-controller="Home" asp-action="Index">
+                            Home <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    @await Component.InvokeAsync("CategoryMenuNav")
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Contact" asp-action="Index">Contact Us</a>
+                    </li>
                     @if (SignInManager.IsSignedIn(User) && User.IsInRole("Administrators"))
                     {
                         @await Component.InvokeAsync("AdminMenu")
 
-                        <li class="dropdown">
-                            <a asp-controller="PieManagement"
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" asp-controller="PieManagement"
                                asp-action="Index">Pie Management</a>
                         </li>
                     }
-                    <li>
-                        <a asp-controller="Pie" asp-action="Details" asp-route-id="30"
-                           asp-protocol="http" asp-host="www.bethanyspieshop.com" asp-fragment="details">
-                            Pie of the week
-                        </a>
-                    </li>
                 </ul>
-                @await Html.PartialAsync("LoginPartial")
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item dropdown p-1" id="li-NavCart2"></li>
+                    <partial name="_LoginPartial" />
+                </ul>
             </div>
         </div>
     </nav>
+    <!-- END NAVEGATION -->
 
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
-                <p class="lead">
-                    <img class="img-responsive" alt="Bethany's Pie Shop'" src="~/Images/bethanylogo.png"  />
-                </p>
-            </div>
-            <div class="col-md-9">
+            <div class="col-md-12">
                 @RenderBody()
             </div>
-            @await Component.InvokeAsync("SystemStatusPage")
-            @await Html.PartialAsync("LanguageSelection")
         </div>
     </div>
 
-    <environment names="Development">
-        <link rel="stylesheet" href="~/Content/site.css" />
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    </environment>
-    <environment names="Staging,Production">
-        <link rel="stylesheet" href="~/Content/site.min.css" />
-        <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    </environment>
-
+    <div class="container body-content pt-4">
+        @RenderBody()
+        <hr />
+        <footer class=" text-muted text-center text-small">
+            <p>&copy; 2018 - EliG MosQera</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+  
     @RenderSection("scripts", required: false)
 
+    <!-- SCRIPT -->
+    <script>
+        
+        $(document).ready(function () {
+            
+            // getShoppingCart();
+            if ($(document).width() <= 974 && $(document).width() > 327) {
+ 
+                $('#liNavU2').css({ 'display': 'none' });
+                $('#liR').css({ 'display': 'none' });
+                $('#liL').css({ 'display': 'none' });
+                $('#liNavU').css({ 'display': 'block' });
+                $('#liNavU3').css({ 'display': 'block' });
+
+            } else if($(document).width() > 974 ){
+                $('#liNavU').css({ 'display': 'none' });
+                $('#liNavU3').css({ 'display': 'none' });
+                $('#liNavU2').css({ 'display': 'block' });
+                $('#liR').css({ 'display': 'block' });
+                $('#liL').css({ 'display': 'block' });
+            }
+        });
+        $(window).resize(function () {
+            // getShoppingCart();
+            if ($(document).width() <= 974 && $(document).width() > 327) {
+                $('#liNavU').css({ 'display': 'block' });
+                $('#liNavU2').css({ 'display': 'none' });
+                $('#liNavU3').css({ 'display': 'block' });
+                $('#liR').css({ 'display': 'none' });
+                $('#liL').css({ 'display': 'none' });
+            } else {
+                $('#liNavU').css({ 'display': 'none' });
+                $('#liNavU2').css({ 'display': 'block' });
+                $('#liNavU3').css({ 'display': 'none' });
+                $('#liR').css({ 'display': 'block' });
+                $('#liL').css({ 'display': 'block' });
+            }
+        });
+        $(document).ready(function () {
+            $('li.active').removeClass('active');
+            $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+        });
+    </script>
+    <!-- <script src="~/js/cart-crud.js"></script> -->
+    <!-- END SCRIPT -->
 </body>
+
 </html>
+<a href=""></a>

@@ -22,7 +22,11 @@ namespace BethanysPieShop.Models
 
         public IEnumerable<PieReview> GetReviewsForPie(int pieId)
         {
-            return _appDbContext.PieReviews.Where(p => p.Pie.PieId == pieId);
+            return _appDbContext.PieReviews.Where(p => p.Pie.PieId == pieId).OrderByDescending(s => s.PieReviewId);
         }
+        // public IEnumerable<PieReview> GetReviewsForUserReview(string userId)
+        // {
+        //     return _appDbContext.PieReviews.Where(p => p.UserReview.Id == userId);
+        // }
     }
 }

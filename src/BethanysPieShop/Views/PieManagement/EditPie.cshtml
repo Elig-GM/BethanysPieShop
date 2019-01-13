@@ -48,6 +48,14 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="Pie.Stock" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Pie.Stock" class="form-control" />
+            <span asp-validation-for="Pie.Stock" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label asp-for="Pie.ImageThumbnailUrl" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <input asp-for="Pie.ImageThumbnailUrl" class="form-control" />
@@ -76,14 +84,6 @@
         <div class="col-md-10">
             <input asp-for="Pie.IsPieOfTheWeek" class="form-control" />
             <span asp-validation-for="Pie.IsPieOfTheWeek" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Pie.SugarLevel" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <select asp-for="Pie.SugarLevel" class="form-control"
-                    asp-items="@new SelectList(Enum.GetNames(typeof(SugarLevel)))"></select>
         </div>
     </div>
 

@@ -29,13 +29,13 @@ namespace BethanysPieShop.Controllers
             var shoppingCartViewModel = new ShoppingCartViewModel
             {
                 ShoppingCart = _shoppingCart,
-                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal()
+                ShoppingCartTotal = _shoppingCart.GetShoppingCartTotal(),
             };
-
             return View(shoppingCartViewModel);
         }
 
-        public RedirectToActionResult AddToShoppingCart(int pieId)
+
+        public IActionResult AddToShoppingCart(int pieId, string returnUrl = null)
         {
             var selectedPie = _pieRepository.Pies.FirstOrDefault(p => p.PieId == pieId);
 
@@ -43,6 +43,9 @@ namespace BethanysPieShop.Controllers
             {
                 _shoppingCart.AddToCart(selectedPie, 1);
             }
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+                
             return RedirectToAction("Index");
         }
 
@@ -54,7 +57,39 @@ namespace BethanysPieShop.Controllers
             {
                 _shoppingCart.RemoveFromCart(selectedPie);
             }
+
+            if(_shoppingCart.GetShoppingCartCount() == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return RedirectToAction("Index");
+        }
+        public IActionResult RemoveAllFromShoppingCart(int pieId, string returnUrl = null)
+        {
+            var selectedPie = _pieRepository.Pies.FirstOrDefault(p => p.PieId == pieId);
+
+            if (selectedPie != null)
+            {
+                _shoppingCart.RemoveAllFromCart(selectedPie);
+            }
+
+            if (_shoppingCart.GetShoppingCartCount() == 0)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            if (!string.IsNullOrEmpty(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction("Index");
+        }
+
+        public RedirectToActionResult ClearFromShoppingCart()
+        {
+
+            _shoppingCart.ClearCart();
+            return RedirectToAction("Index", "Home");
+
         }
     }
 }

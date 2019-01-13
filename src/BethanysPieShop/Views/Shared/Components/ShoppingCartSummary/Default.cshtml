@@ -1,13 +1,56 @@
 ﻿@model ShoppingCartViewModel
+@inject ShoppingCart ShoppingCart;
 
-@if (Model.ShoppingCart.ShoppingCartItems.Count > 0)
-{
-    <li>
-        <a>
-            <span class="glyphicon glyphicon-shopping-cart"></span>
-            <span id="cart-status">
-                @Model.ShoppingCart.ShoppingCartItems.Count
+@{
+    var cart = @ShoppingCart.GetShoppingCartItems();
+}
+
+<style>
+    a#navCart.nav-link.dropdown-toggle::after{
+        display: none;
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: .255em;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent;
+    }
+    div#dropdownM_NavCart.dropdown-menu.show{
+        top: 95%;
+        left: -265px;
+    }
+     
+</style>
+   
+    <li class="nav-item dropdown p-1" id="liNav2">
+        <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navCart">
+            <i class="fa fa-shopping-cart"></i>
+            <span class="badge" id="itemsCount_NavCart">         
             </span>
         </a>
+        <div class="dropdown-menu dropdown-menu-right" id="dropdownM_NavCart" aria-labelledby="navbarDropdown">
+            <!-- <div class="row"> </div> -->
+            <div class="col-md-12">
+                <a asp-controller="ShoppingCart" asp-action="Index">
+                    <h4 class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted">Your cart</span>
+                        <!-- <span class="oi oi-cart"></span> -->
+                    </h4>
+                </a>
+                <ul class="list-group mb-1">
+                    <div id="items_NavCart"></div>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>Total (USD)</span>
+                        <strong id="totalP_NavCart"></strong>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </li>
-}
+
+<script src="~/js/cart-crud.js"></script>
+
+<!-- <i class="far fa-times-circle"></i> -->

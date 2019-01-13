@@ -1,0 +1,91 @@
+﻿@using BethanysPieShop.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<style>
+    a#nlDT.nav-link.dropdown-toggle::after{
+        /*display: none;*/
+        width: 0;
+        height: 0;
+        margin-left: .255em;
+        vertical-align: initial;
+        content: "";
+        border-top: .3em solid;
+        border-right: .3em solid transparent;
+        border-bottom: 0;
+        border-left: .3em solid transparent;
+    }
+    div#dM.dropdown-menu.border-0.show{
+        top: 95%;
+        left: -117px;
+    }
+    img#user {
+        height: 30px;
+        width: 30px;
+    } 
+    .fa-edit {
+        color: white;
+    } 
+</style>
+
+@if (SignInManager.IsSignedIn(User))
+{
+   
+        <!-- <ul class="nav navbar-nav"> -->
+
+        <li class="nav-item dropdown" id="liNavU2">
+            <a asp-controller="Account" id="nlDT" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                
+                <img src="~/images/uyttxprhsqycyximpzjb.png" alt="" id="user"class="rounded-circle">
+            </a>
+
+            <div class="dropdown-menu border-0 p-0" id="dM" aria-labelledby="navbarDropdown">
+                <p class="text-center my-2" >
+                    Hello! @UserManager.GetUserName(User)
+                </p>
+                <div class="dropdown-divider my-1 mx-3"></div>
+                <a class="dropdown-item" asp-controller="Account" asp-action="Profile">
+                    <i class="fas fa-user"></i>
+                    Profile
+                </a>
+                <a id="managerLink" class="dropdown-item" asp-controller="Account" asp-action="Manage">
+                    <i class="fas fa-sliders-h"></i>
+                    Manager
+                </a>
+            <form class="p-0" asp-controller="Account" asp-action="Logout" id="logoutForm">
+                <a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Log off
+                </a>
+            </form>
+            </div>
+        </li>
+
+}
+else
+{
+    <!-- <ul class="nav navbar-nav navbar-right"> -->
+    <li class="nav-item my-auto p-0" id="liR" >
+        <a class="nav-link py-0" id="registerLink" asp-controller="Account" asp-action="Register">
+            <i class="fas fa-user-plus"></i>
+            Register
+        </a>
+    </li>
+    <li class="nav-item my-auto p-0" id="liL" >
+        <a class="nav-link py-0" id="loginLink" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            <i class="fas fa-sign-in-alt"></i>
+            Log in
+        </a>
+    </li>
+    <!-- </ul> -->
+}
+
+<script>
+    $(document).ready(function() {
+        $('a.active').removeClass('active');
+        $('a[href="' + location.pathname + '"]').closest('a').addClass('active'); 
+    });
+</script>

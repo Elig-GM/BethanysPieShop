@@ -1,0 +1,66 @@
+a#navCart.nav-link.dropdown-toggle::after {
+    display: none;
+    width: 0;
+    height: 0;
+    margin-left: .255em;
+    vertical-align: .255em;
+    content: "";
+    border-top: .3em solid;
+    border-right: .3em solid transparent;
+    border-bottom: 0;
+    border-left: .3em solid transparent;
+}
+
+div#dropdownM_NavCart.dropdown-menu.show {
+    right: 8px;
+    top: 95%;
+    left: -215px;
+    border-radius: unset;
+}
+
+.dropdown:hover>div#dropdownM_NavCart.dropdown-menu {
+    display: block;
+    right: 8px;
+    top: 95%;
+    left: -215px;
+    border-radius: unset;
+}
+
+.list-group-item:last-child {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.list-group-item:first-child {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+/* <i class="fas fa-times"></i> */
+@media (max-width: 990px) {
+    div#dropdownM_NavCart.dropdown-menu.show {
+        right: 18px;
+        top: 95%;
+        left: -215px;
+    }
+
+    .dropdown:hover>div#dropdownM_NavCart.dropdown-menu {
+        right: 18px !important;
+        top: 95% !important;
+        left: -215px !important;
+    }
+}
+
+@media (max-width: 394px) {
+    div#dropdownM_NavCart.dropdown-menu.show {
+        right: 19px;
+        top: 95%;
+        left: -183px;
+    }
+
+    .dropdown:hover>div#dropdownM_NavCart.dropdown-menu {
+        right: 19px !important;
+        top: 95% !important;
+        left: -183px !important;
+    }
+}

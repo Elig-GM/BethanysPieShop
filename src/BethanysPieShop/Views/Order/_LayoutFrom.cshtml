@@ -1,0 +1,125 @@
+@using BethanysPieShop.Identity
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity.EntityFrameworkCore
+
+@inject UserManager<AppUser> UserManager
+
+<style>
+    .site-header {
+        background-color: #a593c2;
+        /*-webkit-backdrop-filter: saturate(180%) blur(20px);
+        backdrop-filter: saturate(180%) blur(20px);*/
+    }
+
+        .site-header a {
+            color: #fff;
+            transition: ease-in-out color .15s;
+        }
+
+            .site-header a:hover {
+                color: rgba(0, 0, 0, .85);
+                text-decoration: none;
+            }
+
+        .site-header .navbar-brand:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .site-header .dropdown-item {
+            color: rgba(0, 0, 0, .85);
+            text-decoration: none;
+        }
+
+    /*.navbar-toggler {
+        padding: 0.25rem 0.75rem;
+        font-size: 1.25rem;
+        line-height: 1;
+        background-color: transparent;
+        border: 0px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .navbar-brand {
+        display: inline-block;
+        padding-top: 0.3125rem;
+        padding-bottom: 0.3125rem;
+        margin-right: inherit;
+        font-size: 1.25rem;
+        line-height: inherit;
+        white-space: nowrap;
+    }*/
+</style>
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro">
+    <!-- <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/> -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link href="~/css/form.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="icon" href="~/images/bethanylogo.png">
+    <title>Bethany's Pie Shop - @ViewData["Title"]</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-1">
+        <div class="container body-content">
+            <button class="navbar-toggler p-1 border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand mr-auto mr-lg-0 p-2" asp-controller="Home" asp-action="Index">Bethany's Pie</a>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    @await Component.InvokeAsync("CategoryMenuNav")
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Contact/Index">Contact us</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-auto">
+                    <partial name="_LoginPartial" />
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-1">
+                <a asp-controller="Home" asp-action="Index">
+                    <!-- <p class="lead">
+                        <img class="img-responsive" alt="Bethany's Pie Shop'" src="~/images/bethanylogo.png" />
+                    </p> -->
+                </a>
+            </div>
+            <div class="col-md-10">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p>&copy; 2018 - EliG MosQera</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#">Privacy</a></li>
+                <li class="list-inline-item"><a href="#">Terms</a></li>
+                <li class="list-inline-item"><a href="#">Support</a></li>
+            </ul>
+        </footer>
+    </div>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+@*@model PiesListViewModel
+
+@ViewBag.CurrentCategory
+
+@foreach (var pie in Model.Pies)
+{
+    @Html.Partial("PieOverviewSummary", pie)
+}*@
+
+div class="row" id="pieDiv">
+
+
+</div>
+
+@section scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            LoadMorePies(false);
+        });
+
+        $(window).scroll(function () {
+            if ($(window).scrollTop() == $(document).height() - $(window).height()) {
+                LoadMorePies(true);
+            }
+        });
+
+        function LoadMorePies() {
+
+            $.ajax({
+                type: 'GET',
+                url: '/api/PieData',
+                dataType: 'json',
+                success: function (jsonData) {
+                    if (jsonData == null) {
+                        alert('no data returned');
+                        return;
+                    }
+
+                    $.each(jsonData, function (index, pie) {
+
+                        var PieSummarString = '<div class="col-sm-3 col-lg-3 col-md-3"> ' +
+                                              '  <div class="card mb-3">' +
+                                                    '<a href=/Pie/Details/' + pie.pieId + '>' +
+                                              '         <img class="card-img-top" src="' + pie.imageThumbnailUrl + '" alt="">' +
+                                                    '</a>' +
+                                              '      <div class="caption">' +
+                                              '         <h3 class="float-right">' + pie.price + '</h3>' +
+                                              '         <h5>' +
+                                              '             <a href=/Pie/Details/' + pie.pieId + '>' + pie.name + '</a>' +
+                                              '         </h5>' +
+                                              '         <p>' + pie.shortDescription + '</p>' +
+                                              '    </div>' +
+                                              '    <div class="text-center">' +
+                                              '         <a class="btn btn-primary" asp-controller="ShoppingCart" asp-action="AddToShoppingCart" asp-route-pieId=' + pie.pieId + '>Add to cart</a>' +
+                                              '     </div>' +
+                                              '  </div>' +
+                                              '</div>';
+
+                        $('#pieDiv').append(PieSummarString);
+                    });
+                },
+                error: function (ex) {
+                    alert(ex);
+                }
+            });
+            return false;
+        }
+    </script>
+
+}

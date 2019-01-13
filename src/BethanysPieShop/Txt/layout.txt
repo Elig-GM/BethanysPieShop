@@ -1,0 +1,135 @@
+<!-- <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header" >
+                <button type="button" id="nt" class="navbar-toggle" data-toggle="collapse"  data-target="#bs-example-navbar-collapse-1" 
+                        style="position: relative; 
+                            float: left; 
+                            padding: 9px 10px; 
+                            margin-top: 8px; 
+                            margin-left: 5px; 
+                            margin-right: 1px;
+                            /* margin-bottom: 8px; */
+                            background-color: transparent;
+                            background-image: none;
+                            border: 1px solid transparent;
+                            border-radius: 4px">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand" style="color: white; font-size: 25px;">Bethany's Pie</a>
+                <!-- <a class="navbar-brand" style="color: white; float: right; margin-right: auto"><span class="glyphicon glyphicon-user"></a> -->
+                <!-- @if (@ShoppingCart.GetShoppingCartCount() > 0)
+                {
+                    <a asp-controller="ShoppingCart" asp-action="Index" class="navbar-brand" style="display: none; color: white; float: right; margin-left: auto" id="cart1">
+                        <span class="glyphicon glyphicon-shopping-cart"></span>
+                        <span id="cart-status">
+                            @ShoppingCart.GetShoppingCartCount()
+                        </span>
+                    </a>        
+                } -->
+                <!-- <a class="navbar-brand">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" class="navbar-brand">
+                            @UserManager.GetUserName(User)
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a id="managerLink" class="nav-link" asp-controller="Account" asp-action="Manager"
+                                asp-route-id="@UserManager.GetUserId(User)" style="color:black">Manager</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()" style="color:black">Log off</a>
+                        </div>
+                    </a> -->
+            <!-- </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    @await Component.InvokeAsync("CategoryMenu")
+                    <li><a asp-controller="Contact" asp-action="Index">Contact us</a></li>
+                </ul>
+                <partial name="_LoginPartial"/>
+                    <ul class="nav navbar-nav navbar-right" id="cart2">
+                    @await Component.InvokeAsync("ShoppingCartSummary")
+                </ul>
+            </div>
+        </div> -->
+    <!-- </nav>  -->
+
+
+    <script>
+        //     jQuery(function($) {
+        //   $('#nt')
+        //     .bind('beforeShow', function() {
+        //       alert('beforeShow');
+        //     }) 
+        //     .bind('afterShow', function() {
+        //       alert('afterShow');
+        //     })
+        // });
+        // $('#nt').show('slow', function(){
+        //     // $(this).trigger('isVisible');
+        //     alert('afterShow');
+        // });
+        $(document).ready(function () {  
+            if($(document).width() < 992){
+                //alert('afterShow');
+                $('#liNav').removeClass('d-none')
+                $('#liNav').addClass('d-block');
+                $('#liNav2').removeClass('d-block')
+                $('#liNav2').addClass('d-none');
+            }else{
+                $('#liNav').removeClass('d-block')
+                $('#liNav').addClass('d-none');
+                $('#liNav2').removeClass('d-none')
+                $('#liNav2').addClass('d-block');
+            }     
+            var navbarToggle = $('.navbar-toggle');
+            if (navbarToggle.is(':visible')) {
+                alert('afterShow');
+                document.getElementById("cart").style.display = "block";
+                document.getElementById("cart2").style.display = "none";
+                document.getElementById("logo").style.display = "none";
+            }
+        });
+        $(window).resize(function(){
+            if($(document).width() < 992){
+                //alert('afterShow');
+                $('#liNav').removeClass('d-none')
+                $('#liNav').addClass('d-block');
+                $('#liNav2').removeClass('d-block')
+                $('#liNav2').addClass('d-none');
+            }else{
+                $('#liNav').removeClass('d-block')
+                $('#liNav').addClass('d-none');
+                $('#liNav2').removeClass('d-none')
+                $('#liNav2').addClass('d-block');
+            }
+
+            //var navbarToggle = $('.navbar-toggle');
+            //if (navbarToggle.is(':visible')) {
+                //document.getElementById("cart").style.display = "block";
+                //document.getElementById("cart2").style.display = "none";
+                //document.getElementById("logo").style.display = "none";
+            //}else{
+                //document.getElementById("cart").style.display = "none";
+                //document.getElementById("cart2").style.display = "block";
+                //document.getElementById("logo").style.display = "block";
+            //}
+        });
+
+        // $("#bs-example-navbar-collapse-1").on('shown.bs.collapse', function(){
+        //     alert('The collapsible content is now fully shown.');
+        // });
+        // function myFunction() {
+        //     var navbarToggle = $('.navbar-toggle');
+        //     if (navbarToggle.is(':visible')) {
+        //        document.getElementById("cart1").style.display = "block";
+        //        document.getElementById("cart2").style.display = "none";
+        //        document.getElementById("logo").style.display = "none";
+        //     }else{
+        //        document.getElementById("cart1").style.display = "none";
+        //        document.getElementById("cart2").style.display = "block";
+        //        document.getElementById("logo").style.display = "block";
+        //     }
+        // }
+    </Script>

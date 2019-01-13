@@ -8,6 +8,22 @@
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
+        <label asp-for="Input.FirstName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" asp-for="Input.FirstName">
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </div>
+    </div>
+        <!-- -->
+    <div class="form-group">
+        <label asp-for="Input.LastName" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" asp-for="Input.LastName">
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label asp-for="UserName" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <input asp-for="UserName" class="form-control" />
@@ -32,10 +48,26 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="Input.PhoneNumber" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Input.PhoneNumber" class="form-control" />
+            <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label asp-for="Birthdate" class="col-md-2 control-label"></label>
         <div class="col-md-10">
             <input asp-for="Birthdate" class="form-control" />
             <span asp-validation-for="Birthdate" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="State" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="State" class="form-control" />
+            <span asp-validation-for="State" class="text-danger"></span>
         </div>
     </div>
 
@@ -48,16 +80,8 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Country" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Country" class="form-control" />
-            <span asp-validation-for="Country" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <bethanysbutton content="Create user" button-style="primary" />
+            <input type="submit" class="btn btn-primary" value="Create user" />
         </div>
     </div>
 </form>

@@ -22,12 +22,19 @@ namespace BethanysPieShop.Controllers
         [Authorize]
         public IActionResult Checkout()
         {
+            // var items = _shoppingCart.GetShoppingCartItems();
+            // _shoppingCart.ShoppingCartItems = items;
+
+            // if (_shoppingCart.ShoppingCartItems.Count == 0)
+            // {
+            //     ModelState.AddModelError("", "Your cart is empty, add some pies first");
+            //     return RedirectToAction("Index", "ShoppingCart");
+            // }
             return View();
         }
 
         [HttpPost]
         [Authorize]
-        [Authorize(Policy = "MinimumOrderAge")]
         public IActionResult Checkout(Order order)
         {
             var items = _shoppingCart.GetShoppingCartItems();
@@ -40,6 +47,8 @@ namespace BethanysPieShop.Controllers
 
             if (ModelState.IsValid)
             {
+                _shoppingCart.SetPieStock();
+                order.OrderTotal = _shoppingCart.GetShoppingCartTotal();
                 _orderRepository.CreateOrder(order);
                 _shoppingCart.ClearCart();
                 return RedirectToAction("CheckoutComplete");
